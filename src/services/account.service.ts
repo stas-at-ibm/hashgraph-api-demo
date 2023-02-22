@@ -2,11 +2,9 @@ import {
   AccountBalance,
   AccountBalanceQuery,
   AccountCreateTransaction,
-  AccountId,
   Client,
   Hbar,
   PrivateKey,
-  PublicKey,
   TransactionReceipt,
   TransferTransaction,
 } from "@hashgraph/sdk";
@@ -14,10 +12,9 @@ import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { logger } from "src/utils/logger";
 
 export interface Account {
-  creationReceipt: TransactionReceipt;
-  accountId: AccountId;
-  privateKey: PrivateKey;
-  publicKey: PublicKey;
+  accountId: string;
+  privateKey: string;
+  publicKey: string;
 }
 
 export class AccountService {
@@ -89,10 +86,9 @@ export class AccountService {
     logger.info(`the new balance is: ${accountBalance.hbars.toTinybars()} tinybar`);
 
     return {
-      creationReceipt: receipt,
-      accountId: newAccountId,
-      privateKey: newAccountPrivateKey,
-      publicKey: newAccountPublicKey,
+      accountId: newAccountId.toString(),
+      privateKey: newAccountPrivateKey.toStringRaw(),
+      publicKey: newAccountPublicKey.toStringRaw(),
     };
   }
 }
