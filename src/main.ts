@@ -57,22 +57,11 @@ async function transferOneTwo() {
   process.exit();
 }
 
-async function main() {
-  //Grab your Hedera testnet account ID and private key from your .env file
-  const myAccountId = process.env.MY_ACCOUNT_ID;
-  const myPrivateKey = process.env.MY_PRIVATE_KEY;
+async function createAccount() {
+  const account1 = await accountService.createAccount();
 
-  // If we weren't able to grab it, we should throw a new error
-  if (!myAccountId || !myPrivateKey) {
-    throw new Error(
-      "Environment variables MY_ACCOUNT_ID and MY_PRIVATE_KEY must be present",
-    );
-  }
-
-  // Create our connection to the Hedera network
-  // The Hedera JS SDK makes this really easy!
-  const client = Client.forTestnet();
-  client.setOperator(myAccountId, myPrivateKey);
+  logger.info(`the new account private key is: ${account1.privateKey.toStringRaw()}`);
+  logger.info(`the new account public key is: ${account1.publicKey.toStringRaw()}`);
 }
 
 // balanceOne().catch((err) => {
@@ -83,6 +72,10 @@ async function main() {
 //   logger.error(err);
 // });
 
-transferOneTwo().catch((err) => {
-  logger.error(err);
-});
+// transferOneTwo().catch((err) => {
+//   logger.error(err);
+// });
+
+// createAccount().catch((err) => {
+//   logger.error(err);
+// });
