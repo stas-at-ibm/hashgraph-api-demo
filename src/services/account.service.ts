@@ -1,13 +1,24 @@
 import {
   AccountBalance,
   AccountBalanceQuery,
+  AccountCreateTransaction,
+  AccountId,
   Client,
   Hbar,
+  PrivateKey,
+  PublicKey,
   TransactionReceipt,
   TransferTransaction,
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { logger } from "src/utils/logger";
+
+export interface Account {
+  creationReceipt: TransactionReceipt;
+  accountId: AccountId;
+  privateKey: PrivateKey;
+  publicKey: PublicKey;
+}
 
 export class AccountService {
   #client: Client;
@@ -51,5 +62,37 @@ export class AccountService {
     logger.info(`transaction consensus status is ${transactionStatus}`);
 
     return receipt;
+  }
+
+  async createAccount(initialBalance: number = 1000): Promise<Account> {
+    // Create new keys
+    const newAccountPrivateKey = PrivateKey.generateED25519();
+    const newAccountPublicKey = newAccountPrivateKey.publicKey;
+
+    // Create a new account with 1,000 tinybar starting balance
+    const newAccount = await new AccountCreateTransaction()
+      .setKey(newAccountPublicKey)
+      .setInitialBalance(Hbar.fromTinybars(initialBalance))
+      .execute(this.#client);
+
+    // Get the new account ID
+    const receipt = await newAccount.getReceipt(this.#client);
+    const newAccountId = receipt.accountId!;
+
+    logger.info(`the new account ID is: ${newAccountId}`);
+
+    // Verify the account balance
+    const accountBalance = await new AccountBalanceQuery()
+      .setAccountId(newAccountId)
+      .execute(this.#client);
+
+    logger.info(`the new balance is: ${accountBalance.hbars.toTinybars()} tinybar`);
+
+    return {
+      creationReceipt: receipt,
+      accountId: newAccountId,
+      privateKey: newAccountPrivateKey,
+      publicKey: newAccountPublicKey,
+    };
   }
 }
