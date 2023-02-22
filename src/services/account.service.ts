@@ -12,6 +12,7 @@ import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { logger } from "src/utils/logger";
 
 export interface Account {
+  name: string;
   accountId: string;
   privateKey: string;
   publicKey: string;
@@ -61,7 +62,10 @@ export class AccountService {
     return receipt;
   }
 
-  async createAccount(initialBalance: number = 1000): Promise<Account> {
+  async createAccount(
+    name: string = "account1",
+    initialBalance: number = 1000,
+  ): Promise<Account> {
     // Create new keys
     const newAccountPrivateKey = PrivateKey.generateED25519();
     const newAccountPublicKey = newAccountPrivateKey.publicKey;
@@ -86,6 +90,7 @@ export class AccountService {
     logger.info(`the new balance is: ${accountBalance.hbars.toTinybars()} tinybar`);
 
     return {
+      name,
       accountId: newAccountId.toString(),
       privateKey: newAccountPrivateKey.toStringRaw(),
       publicKey: newAccountPublicKey.toStringRaw(),
