@@ -2,6 +2,7 @@ import {
   AccountBalance,
   AccountBalanceQuery,
   AccountCreateTransaction,
+  AccountId,
   Client,
   Hbar,
   PrivateKey,
@@ -25,7 +26,7 @@ export class AccountService {
     this.#client = hedera.client;
   }
 
-  async getAccountBalanceById(accId: string): Promise<AccountBalance> {
+  async getAccountBalanceById(accId: string | AccountId): Promise<AccountBalance> {
     const query = new AccountBalanceQuery().setAccountId(accId);
 
     // Sign with the client operator account private key and submit to a Hedera network
