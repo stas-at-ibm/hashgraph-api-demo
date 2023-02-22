@@ -1,10 +1,13 @@
 import {
   AccountBalanceQuery,
   Client,
+  Hbar,
+  TokenAssociateTransaction,
   TokenCreateTransaction,
   TokenId,
   TokenInfoQuery,
   TokenType,
+  TransferTransaction,
   Wallet,
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
@@ -88,5 +91,61 @@ export class TokenService {
     }
 
     return result;
+  }
+
+  async associateAccountWithToken(
+    associatedWallet: Wallet,
+    tokenId: string,
+  ): Promise<TokenService> {
+    //  Before an account that is not the treasury for a token can receive or send this specific token ID, the account
+    //  must become “associated” with the token.
+    const tx = await new TokenAssociateTransaction()
+      .setAccountId(associatedWallet.accountId)
+      .setTokenIds([tokenId])
+      .freezeWith(this.#client);
+
+    const signTx = await associatedWallet.signTransaction(tx);
+
+    //SUBMIT THE TRANSACTION
+    const txResponse = await signTx.execute(this.#client);
+
+    //GET THE RECEIPT OF THE TRANSACTION
+    const receipt = await txResponse.getReceipt(this.#client);
+
+    //LOG THE TRANSACTION STATUS
+    logger.info(
+      `token association with the users ${associatedWallet.accountId} account: ${receipt.status} \n`,
+    );
+
+    return this;
+  }
+
+  async atomicSwap(
+    sender: Wallet,
+    reciever: Wallet,
+    tokenId: string,
+    tokenAmount: number,
+    fee: Hbar,
+  ) {
+    //Atomic swap between a Hedera Token Service token and hbar
+    const tx = await new TransferTransaction()
+      .addHbarTransfer(reciever.accountId, fee.negated())
+      .addHbarTransfer(sender.accountId, fee)
+      .addTokenTransfer(tokenId, sender.accountId, -tokenAmount)
+      .addTokenTransfer(tokenId, reciever.accountId, tokenAmount)
+      .freezeWith(this.#client);
+
+    //Sign the transaction with accountId1 and accountId2 private keys, submit the transaction to a Hedera network
+    const signTx = await reciever.signTransaction(await sender.signTransaction(tx));
+
+    const txResponse = await signTx.execute(this.#client);
+
+    //GET THE RECEIPT OF THE TRANSACTION
+    const receipt = await txResponse.getReceipt(this.#client);
+
+    //LOG THE TRANSACTION STATUS
+    logger.info(
+      `the atomic swap transaction consensus status ${receipt.status.toString()}`,
+    );
   }
 }
