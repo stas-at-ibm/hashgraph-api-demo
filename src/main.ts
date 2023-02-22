@@ -1,8 +1,9 @@
 import { logger } from "./utils/logger";
 import dotenv from "dotenv";
-import { Client, Hbar, PrivateKey } from "@hashgraph/sdk";
+import { Hbar, PrivateKey } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "./infrastructure/hedera.testnet.client";
 import { AccountService } from "./services/account.service";
+import fs from "fs";
 
 dotenv.config();
 
@@ -58,10 +59,13 @@ async function transferOneTwo() {
 }
 
 async function createAccount() {
-  const account1 = await accountService.createAccount();
+  const account = await accountService.createAccount();
 
-  logger.info(`the new account private key is: ${account1.privateKey.toStringRaw()}`);
-  logger.info(`the new account public key is: ${account1.publicKey.toStringRaw()}`);
+  logger.info(`the new account private key is: ${account.privateKey}`);
+  logger.info(`the new account public key is: ${account.publicKey}`);
+
+  const path = `${__dirname}/artifacts/${account.accountId}.json`;
+  fs.writeFileSync(path, JSON.stringify(account, null, 2));
 }
 
 // balanceOne().catch((err) => {
