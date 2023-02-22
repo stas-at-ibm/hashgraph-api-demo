@@ -8,7 +8,7 @@ export class HederaTestNetClient {
     this.client.setOperator(operatorAccId, operatorPrivateKey);
   }
 
-  changeOperator(newOperatorAccId: string, newOperatorPrivateKey: string) {
+  changeOperator(newOperatorAccId: string, newOperatorPrivateKey: string | PrivateKey) {
     this.client.setOperator(newOperatorAccId, newOperatorPrivateKey);
   }
 }
