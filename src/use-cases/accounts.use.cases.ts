@@ -52,6 +52,18 @@ export async function transferOneTwo() {
   );
 }
 
+export async function transfer500fromMainToAcc1() {
+  const account1Id = <string>process.env.ACCOUNT1_ID;
+  await accountService.transferHbar(myAccountId, account1Id, new Hbar(500));
+
+  const mainAccountBalance = await accountService.getAccountBalanceById(myAccountId);
+  const account1Balance = await accountService.getAccountBalanceById(account1Id);
+
+  logger.info(
+    `main account balance ${mainAccountBalance.hbars} HBar, account1 balance ${account1Balance.hbars}`,
+  );
+}
+
 export async function createAccount() {
   const account = await accountService.createAccount();
 
