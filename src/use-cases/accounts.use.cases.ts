@@ -25,6 +25,8 @@ export async function balanceOne() {
     logger.info(accountBalance, "All account Info:");
     logger.info(accountBalance.toString());
   }
+
+  process.exit();
 }
 
 export async function balanceTwo() {
@@ -39,6 +41,7 @@ export async function balanceTwo() {
     logger.info(accountBalance, "All account Info:");
     logger.info(accountBalance.toString());
   }
+  process.exit();
 }
 
 export async function transferOneTwo() {
@@ -50,18 +53,23 @@ export async function transferOneTwo() {
   logger.info(
     `my account balance ${accountBalanceMine.hbars} HBar, other account balance ${accountBalanceOther.hbars}`,
   );
+
+  process.exit();
 }
 
-export async function transfer500fromMainToAcc1() {
-  const account1Id = <string>process.env.ACCOUNT1_ID;
-  await accountService.transferHbar(myAccountId, account1Id, new Hbar(500));
+export async function transferXfromMainTo(targetAccountId: string, amount: number) {
+  await accountService.transferHbar(myAccountId, targetAccountId, new Hbar(amount));
 
   const mainAccountBalance = await accountService.getAccountBalanceById(myAccountId);
-  const account1Balance = await accountService.getAccountBalanceById(account1Id);
+  const targetAccountBalance = await accountService.getAccountBalanceById(
+    targetAccountId,
+  );
 
   logger.info(
-    `main account balance ${mainAccountBalance.hbars} HBar, account1 balance ${account1Balance.hbars}`,
+    `main account balance ${mainAccountBalance.hbars} HBar, account1 balance ${targetAccountBalance.hbars}`,
   );
+
+  process.exit();
 }
 
 export async function createAccount() {
@@ -72,6 +80,8 @@ export async function createAccount() {
 
   const path = `${__dirname}/artifacts/${account.name}.json`;
   fs.writeFileSync(path, JSON.stringify(account, null, 2));
+
+  process.exit();
 }
 
 export async function createAccounts() {
@@ -88,4 +98,6 @@ export async function createAccounts() {
     const path = `${__dirname.replace("/use-cases", "")}/artifacts/${account.name}.json`;
     fs.writeFileSync(path, JSON.stringify(account, null, 2));
   });
+
+  process.exit();
 }
