@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const accounts = {
-  main: {
+export const env = {
+  mainAcc: {
     name: "main",
     id: process.env.MY_ACCOUNT_ID!,
     privateKey: process.env.MY_PRIVATE_KEY!,
@@ -39,4 +39,7 @@ export const accounts = {
     privateKey: process.env.ACCOUNT5_PRIVATE_KEY!,
     publicKey: process.env.ACCOUNT5_PUBLIC_KEY!,
   },
+  scheduleId: process.env.SCHEDULE_ID!,
+  topicId: process.env.TOPIC_ID!,
+  tokenId: process.env.TOKEN_ID!,
 };

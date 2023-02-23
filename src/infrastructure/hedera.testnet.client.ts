@@ -1,5 +1,5 @@
 import { Client, PrivateKey } from "@hashgraph/sdk";
-import { accounts } from "src/utils/accounts";
+import { env } from "src/utils/accounts";
 
 export class HederaTestNetClient {
   client: Client;
@@ -7,8 +7,8 @@ export class HederaTestNetClient {
   constructor(operatorAccId?: string, operatorPrivateKey?: string | PrivateKey) {
     this.client = Client.forTestnet();
     this.client.setOperator(
-      operatorAccId || accounts.main.id,
-      operatorPrivateKey || accounts.main.privateKey,
+      operatorAccId || env.mainAcc.id,
+      operatorPrivateKey || env.mainAcc.privateKey,
     );
   }
 
