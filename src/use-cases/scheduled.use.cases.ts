@@ -27,7 +27,7 @@ export class ScheduledUseCases {
     const scheduledTx = await new ScheduleCreateTransaction()
       .setScheduledTransaction(transaction)
       .setScheduleMemo("scheduled TX of 2 Hbar from acc1 to acc2")
-      .setAdminKey(PrivateKey.fromString(env.mainAcc.privateKey))
+      .setAdminKey(env.mainAcc.privateKey)
       .execute(client);
 
     //Get the receipt of the transaction
@@ -49,7 +49,7 @@ export class ScheduledUseCases {
     const tx = await new ScheduleDeleteTransaction()
       .setScheduleId(env.scheduleId)
       .freezeWith(client)
-      .sign(PrivateKey.fromString(env.mainAcc.privateKey));
+      .sign(env.mainAcc.privateKey);
 
     //Sign with the operator key and submit to a Hedera network
     const txResponse = await tx.execute(client);
@@ -99,7 +99,7 @@ export class ScheduledUseCases {
     const tx = await new ScheduleSignTransaction()
       .setScheduleId(env.scheduleId)
       .freezeWith(client)
-      .sign(PrivateKey.fromString(env.acc1.privateKey));
+      .sign(env.acc1.privateKey);
 
     //Sign with the client operator key to pay for the transaction and submit to a Hedera network
     const txResponse = await tx.execute(client);
