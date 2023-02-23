@@ -3,7 +3,7 @@ import { Hbar, PrivateKey } from "@hashgraph/sdk";
 import fs from "fs";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { AccountService } from "src/services/account.service";
-import { log } from "src/utils/logger";
+import { log } from "src/utils/log";
 
 dotenv.config();
 

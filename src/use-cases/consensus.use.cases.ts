@@ -1,7 +1,7 @@
 import { TopicCreateTransaction, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { env } from "src/utils/env";
-import { log } from "src/utils/logger";
+import { log } from "src/utils/log";
 
 export class ConsensusUseCases {
   static async createProtectedTopic() {

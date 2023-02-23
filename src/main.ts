@@ -1,6 +1,6 @@
 import { createAccounts, transferXfromMainTo } from "./use-cases/accounts.use.cases";
 import { TokenUseCase } from "./use-cases/token.use.cases";
-import { log } from "./utils/logger";
+import { log } from "./utils/log";
 import dotenv from "dotenv";
 import { ScheduledUseCases } from "./use-cases/scheduled.use.cases";
 import { MultiSigUseCases } from "./use-cases/multi.sig.use.cases";

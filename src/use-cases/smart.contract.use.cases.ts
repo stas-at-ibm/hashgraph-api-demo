@@ -6,7 +6,7 @@ import {
 } from "@hashgraph/sdk";
 import { client } from "src/utils/client";
 import { env } from "src/utils/env";
-import { log } from "src/utils/logger";
+import { log } from "src/utils/log";
 
 export class SmartContractUseCases {
   static async deploySmartContract() {

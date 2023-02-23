@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { AccountBalanceQuery, Hbar, PrivateKey, Wallet } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { TokenService } from "src/services/token.service";
-import { log } from "src/utils/logger";
+import { log } from "src/utils/log";
 import { AccountService } from "src/services/account.service";
 
 export class TokenUseCase {
