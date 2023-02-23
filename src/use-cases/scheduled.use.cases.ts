@@ -14,8 +14,8 @@ export class ScheduledUseCases {
 
     //Create a transaction to schedule
     const transaction = new TransferTransaction()
-      .addHbarTransfer(accounts.account1.accountId, new Hbar(-2))
-      .addHbarTransfer(accounts.account2.accountId, new Hbar(2));
+      .addHbarTransfer(accounts.acc1.id, new Hbar(-2))
+      .addHbarTransfer(accounts.acc2.id, new Hbar(2));
 
     //Schedule a transaction
     const scheduledTx = await new ScheduleCreateTransaction()

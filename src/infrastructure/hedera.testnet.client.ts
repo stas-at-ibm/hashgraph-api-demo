@@ -7,7 +7,7 @@ export class HederaTestNetClient {
   constructor(operatorAccId?: string, operatorPrivateKey?: string | PrivateKey) {
     this.client = Client.forTestnet();
     this.client.setOperator(
-      operatorAccId || accounts.main.accountId,
+      operatorAccId || accounts.main.id,
       operatorPrivateKey || accounts.main.privateKey,
     );
   }
