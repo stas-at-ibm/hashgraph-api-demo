@@ -1,11 +1,12 @@
 import pino from "pino";
+import pretty from "pino-pretty";
 
-export const logger = pino({
-  namo: "hg-demo",
-  transport: {
-    target: "pino-pretty",
-    options: {
-      colorize: true,
-    },
+const path = __dirname.replace("/src/utils", "/tmp/info.stream.out");
+const streams = [{ stream: pino.destination(path) }, { stream: pretty() }];
+
+export const logger = pino(
+  {
+    name: "hg-demo",
   },
-});
+  pino.multistream(streams),
+);
