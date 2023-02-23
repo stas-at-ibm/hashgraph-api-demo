@@ -10,7 +10,7 @@ import {
   TransferTransaction,
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
-import { env } from "src/utils/accounts";
+import { env } from "src/utils/env";
 import { logger } from "src/utils/logger";
 
 export class ScheduledUseCases {

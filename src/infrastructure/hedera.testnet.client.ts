@@ -1,5 +1,5 @@
 import { Client, PrivateKey } from "@hashgraph/sdk";
-import { env } from "src/utils/accounts";
+import { env } from "src/utils/env";
 
 export class HederaTestNetClient {
   client: Client;
