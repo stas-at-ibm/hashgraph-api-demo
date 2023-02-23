@@ -2,6 +2,7 @@ import { createAccounts, transferXfromMainTo } from "./use-cases/accounts.use.ca
 import { TokenUseCase } from "./use-cases/token.use.cases";
 import { logger } from "./utils/logger";
 import dotenv from "dotenv";
+import { ScheduledUseCases } from "./use-cases/scheduled.use.cases";
 
 dotenv.config();
 
@@ -41,6 +42,26 @@ dotenv.config();
 // });
 
 // TokenUseCase.atomicSwap().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ScheduledUseCases.scheduleTx().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ScheduledUseCases.scheduleTxInfo().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ScheduledUseCases.deleteTx().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ScheduledUseCases.submitScheduleTx().catch((err) => {
 //   logger.error(err);
 //   process.exit();
 // });

@@ -6,6 +6,7 @@ import {
   ScheduleDeleteTransaction,
   ScheduleId,
   ScheduleInfoQuery,
+  ScheduleSignTransaction,
   Timestamp,
   TransferTransaction,
 } from "@hashgraph/sdk";
@@ -42,12 +43,11 @@ export class ScheduledUseCases {
   }
 
   static async deleteTx() {
-    const scheduleId = process.env.SCHEDULE_ID!;
     const client = new HederaTestNetClient().client;
 
     //Create the transaction and sign with the admin key
     const tx = await new ScheduleDeleteTransaction()
-      .setScheduleId(scheduleId)
+      .setScheduleId(env.scheduleId)
       .freezeWith(client)
       .sign(PrivateKey.fromString(env.mainAcc.privateKey));
 
@@ -58,6 +58,8 @@ export class ScheduledUseCases {
     const receipt = await txResponse.getReceipt(client);
 
     logger.info(`the delete transaction consensus status ${receipt.status.toString()}`);
+
+    process.exit();
   }
 
   static async scheduleTxInfo() {
@@ -69,29 +71,50 @@ export class ScheduledUseCases {
     //Sign with the client operator private key and submit the query request to a node in a Hedera network
     const info = await query.execute(client);
     logger.info(
-      "The scheduledId you queried for is: ",
-      new ScheduleId(info.scheduleId).toString(),
+      "the scheduledId you queried for is: " + new ScheduleId(info.scheduleId).toString(),
     );
-    logger.info("The memo for it is: ", info.scheduleMemo);
-    logger.info("It got created by: ", new AccountId(info.creatorAccountId!).toString());
-    logger.info("It got payed by: ", new AccountId(info.payerAccountId!).toString());
+    logger.info("the memo for it is: " + info.scheduleMemo);
+    logger.info("it got created by: " + new AccountId(info.creatorAccountId!).toString());
+    logger.info("it got payed by: " + new AccountId(info.payerAccountId!).toString());
     logger.info(
-      "The expiration time of the scheduled tx is: ",
-      new Timestamp(info.expirationTime!.seconds, info.expirationTime!.nanos).toDate(),
+      "the expiration time of the scheduled tx is: " +
+        new Timestamp(info.expirationTime!.seconds, info.expirationTime!.nanos).toDate(),
     );
 
-    if (
-      new Timestamp(info.executed!.seconds, info.executed!.nanos).toDate().getTime() ===
-      new Date("1970-01-01T00:00:00.000Z").getTime()
-    ) {
-      logger.info("The transaction has not been executed yet.");
+    if (info.executed === null) {
+      logger.info("the transaction has not been executed yet");
     } else {
       logger.info(
-        "The time of execution of the scheduled tx is: ",
-        new Timestamp(info.executed!.seconds, info.executed!.nanos).toDate(),
+        "the time of execution of the scheduled tx is: " +
+          new Timestamp(info.executed!.seconds, info.executed!.nanos).toDate(),
       );
     }
+
+    process.exit();
   }
 
-  static async submitScheduleTx() {}
+  static async submitScheduleTx() {
+    const client = new HederaTestNetClient().client;
+
+    const tx = await new ScheduleSignTransaction()
+      .setScheduleId(env.scheduleId)
+      .freezeWith(client)
+      .sign(PrivateKey.fromString(env.acc1.privateKey));
+
+    //Sign with the client operator key to pay for the transaction and submit to a Hedera network
+    const txResponse = await tx.execute(client);
+
+    try {
+      //Get the receipt of the transaction
+      const receipt = await txResponse.getReceipt(client);
+
+      logger.info(
+        `the schedule transaction consensus status ${receipt.status.toString()}`,
+      );
+    } catch (error) {
+      logger.error(error, `scheduled tx with id ${env.scheduleId} can not be executed`);
+    }
+
+    process.exit();
+  }
 }
