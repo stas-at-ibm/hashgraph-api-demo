@@ -11,7 +11,7 @@ import {
   Wallet,
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export class TokenService {
   #client: Client;
@@ -48,14 +48,14 @@ export class TokenService {
     //Get the token ID from the receipt
     const tokenId = receipt.tokenId!;
 
-    logger.info(`the new token ID is ${tokenId}`);
+    log.info(`the new token ID is ${tokenId}`);
 
     //Sign with the client operator private key, submit the query to the network and get the token supply
     const name = await this.#queryTokenFunction("name", tokenId);
     const symbol = await this.#queryTokenFunction("symbol", tokenId);
     const tokenSupply = await this.#queryTokenFunction("totalSupply", tokenId);
 
-    logger.info(`the total supply of the ${name} token is ${tokenSupply} of ${symbol}`);
+    log.info(`the total supply of the ${name} token is ${tokenSupply} of ${symbol}`);
 
     //Create the query
     const balanceQuery = new AccountBalanceQuery().setAccountId(adminUser.accountId);
@@ -63,7 +63,7 @@ export class TokenService {
     //Sign with the client operator private key and submit to a Hedera network
     const tokenBalance = await balanceQuery.execute(this.#client);
 
-    logger.info(`the balance of the user is: ${tokenBalance.tokens!.get(tokenId)}`);
+    log.info(`the balance of the user is: ${tokenBalance.tokens!.get(tokenId)}`);
 
     return tokenId;
   }
@@ -75,7 +75,7 @@ export class TokenService {
     //Create the query
     const query = new TokenInfoQuery().setTokenId(tokenId);
 
-    logger.info(`retrieveing the ${functionName}`);
+    log.info(`retrieveing the ${functionName}`);
     const body = await query.execute(this.#client);
 
     //Sign with the client operator private key, submit the query to the network and get the token supply
@@ -113,7 +113,7 @@ export class TokenService {
     const receipt = await txResponse.getReceipt(this.#client);
 
     //LOG THE TRANSACTION STATUS
-    logger.info(
+    log.info(
       `token association with the users ${associatedWallet.accountId} account: ${receipt.status} \n`,
     );
 
@@ -144,8 +144,6 @@ export class TokenService {
     const receipt = await txResponse.getReceipt(this.#client);
 
     //LOG THE TRANSACTION STATUS
-    logger.info(
-      `the atomic swap transaction consensus status ${receipt.status.toString()}`,
-    );
+    log.info(`the atomic swap transaction consensus status ${receipt.status.toString()}`);
   }
 }

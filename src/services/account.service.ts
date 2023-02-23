@@ -10,7 +10,7 @@ import {
   TransferTransaction,
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export interface Account {
   name: string;
@@ -47,7 +47,7 @@ export class AccountService {
       .addHbarTransfer(sourceAccId, amount.negated())
       .addHbarTransfer(targetAccId, amount);
 
-    logger.info(`transfering hbar from ${sourceAccId} to ${targetAccId}`);
+    log.info(`transfering hbar from ${sourceAccId} to ${targetAccId}`);
 
     // Sign with the client operator key and submit the transaction to a Hedera network
     const txId = await transaction.execute(this.#client);
@@ -58,7 +58,7 @@ export class AccountService {
     // Get the transaction consensus status
     const transactionStatus = receipt.status;
 
-    logger.info(`transaction consensus status is ${transactionStatus}`);
+    log.info(`transaction consensus status is ${transactionStatus}`);
 
     return receipt;
   }
@@ -81,14 +81,14 @@ export class AccountService {
     const receipt = await newAccount.getReceipt(this.#client);
     const newAccountId = receipt.accountId!;
 
-    logger.info(`the new account ID is: ${newAccountId}`);
+    log.info(`the new account ID is: ${newAccountId}`);
 
     // Verify the account balance
     const accountBalance = await new AccountBalanceQuery()
       .setAccountId(newAccountId)
       .execute(this.#client);
 
-    logger.info(`the new balance is: ${accountBalance.hbars.toTinybars()} tinybar`);
+    log.info(`the new balance is: ${accountBalance.hbars.toTinybars()} tinybar`);
 
     return {
       name,

@@ -8,7 +8,7 @@ import {
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { env } from "src/utils/env";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export class MultiSigUseCases {
   static async createMultiKeyWallet() {
@@ -28,14 +28,14 @@ export class MultiSigUseCases {
     const receipt = await newAccount.getReceipt(client);
     const newAccountId = receipt.accountId!;
 
-    logger.info(`the new account ID is: ${newAccountId}`);
+    log.info(`the new account ID is: ${newAccountId}`);
 
     // Verify the account balance
     const accountBalance = await new AccountBalanceQuery()
       .setAccountId(newAccountId)
       .execute(client);
 
-    logger.info(`the new balance is: ${accountBalance.hbars} Hbar`);
+    log.info(`the new balance is: ${accountBalance.hbars} Hbar`);
 
     process.exit();
   }
@@ -60,7 +60,7 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
     process.exit();
   }
@@ -87,14 +87,14 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
     const query = new AccountBalanceQuery().setAccountId(env.acc4.id);
 
     // Sign with the client operator account private key and submit to a Hedera network
     const accountBalance = await query.execute(client);
 
-    logger.info(
+    log.info(
       `The account balance for account ${env.acc4.id} is ${accountBalance.hbars} HBar`,
     );
 

@@ -12,7 +12,7 @@ import {
 } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { env } from "src/utils/env";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export class ScheduledUseCases {
   static async scheduleTx() {
@@ -34,10 +34,10 @@ export class ScheduledUseCases {
     const receipt = await scheduledTx.getReceipt(client);
 
     //Get the schedule ID
-    logger.info(`the schedule ID is ${receipt.scheduleId}`);
+    log.info(`the schedule ID is ${receipt.scheduleId}`);
 
     //Get the scheduled transaction ID
-    logger.info(`the scheduled transaction ID is ${receipt.scheduledTransactionId}`);
+    log.info(`the scheduled transaction ID is ${receipt.scheduledTransactionId}`);
 
     process.exit();
   }
@@ -57,7 +57,7 @@ export class ScheduledUseCases {
     //Get the transaction receipt
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`the delete transaction consensus status ${receipt.status.toString()}`);
+    log.info(`the delete transaction consensus status ${receipt.status.toString()}`);
 
     process.exit();
   }
@@ -70,21 +70,21 @@ export class ScheduledUseCases {
 
     //Sign with the client operator private key and submit the query request to a node in a Hedera network
     const info = await query.execute(client);
-    logger.info(
+    log.info(
       "the scheduledId you queried for is: " + new ScheduleId(info.scheduleId).toString(),
     );
-    logger.info("the memo for it is: " + info.scheduleMemo);
-    logger.info("it got created by: " + new AccountId(info.creatorAccountId!).toString());
-    logger.info("it got payed by: " + new AccountId(info.payerAccountId!).toString());
-    logger.info(
+    log.info("the memo for it is: " + info.scheduleMemo);
+    log.info("it got created by: " + new AccountId(info.creatorAccountId!).toString());
+    log.info("it got payed by: " + new AccountId(info.payerAccountId!).toString());
+    log.info(
       "the expiration time of the scheduled tx is: " +
         new Timestamp(info.expirationTime!.seconds, info.expirationTime!.nanos).toDate(),
     );
 
     if (info.executed === null) {
-      logger.info("the transaction has not been executed yet");
+      log.info("the transaction has not been executed yet");
     } else {
-      logger.info(
+      log.info(
         "the time of execution of the scheduled tx is: " +
           new Timestamp(info.executed!.seconds, info.executed!.nanos).toDate(),
       );
@@ -108,11 +108,9 @@ export class ScheduledUseCases {
       //Get the receipt of the transaction
       const receipt = await txResponse.getReceipt(client);
 
-      logger.info(
-        `the schedule transaction consensus status ${receipt.status.toString()}`,
-      );
+      log.info(`the schedule transaction consensus status ${receipt.status.toString()}`);
     } catch (error) {
-      logger.error(error, `scheduled tx with id ${env.scheduleId} can not be executed`);
+      log.error(error, `scheduled tx with id ${env.scheduleId} can not be executed`);
     }
 
     process.exit();

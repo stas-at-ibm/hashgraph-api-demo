@@ -3,7 +3,7 @@ import { Hbar, PrivateKey } from "@hashgraph/sdk";
 import fs from "fs";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { AccountService } from "src/services/account.service";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 dotenv.config();
 
@@ -18,12 +18,12 @@ export async function balanceOne() {
   const accountBalance = await accountService.getAccountBalanceById(myAccountId);
 
   if (accountBalance) {
-    logger.info(
+    log.info(
       `The account balance for account ${myAccountId} is ${accountBalance.hbars} HBar`,
     );
 
-    logger.info(accountBalance, "All account Info:");
-    logger.info(accountBalance.toString());
+    log.info(accountBalance, "All account Info:");
+    log.info(accountBalance.toString());
   }
 
   process.exit();
@@ -34,12 +34,12 @@ export async function balanceTwo() {
   const accountBalance = await accountService.getAccountBalanceById(otherAccountId);
 
   if (accountBalance) {
-    logger.info(
+    log.info(
       `The account balance for someone else's account ${otherAccountId} is ${accountBalance.hbars} HBar`,
     );
 
-    logger.info(accountBalance, "All account Info:");
-    logger.info(accountBalance.toString());
+    log.info(accountBalance, "All account Info:");
+    log.info(accountBalance.toString());
   }
   process.exit();
 }
@@ -50,7 +50,7 @@ export async function transferOneTwo() {
   const accountBalanceMine = await accountService.getAccountBalanceById(myAccountId);
   const accountBalanceOther = await accountService.getAccountBalanceById(otherAccountId);
 
-  logger.info(
+  log.info(
     `my account balance ${accountBalanceMine.hbars} HBar, other account balance ${accountBalanceOther.hbars}`,
   );
 
@@ -65,7 +65,7 @@ export async function transferXfromMainTo(targetAccountId: string, amount: numbe
     targetAccountId,
   );
 
-  logger.info(
+  log.info(
     `main account balance ${mainAccountBalance.hbars} HBar, account1 balance ${targetAccountBalance.hbars}`,
   );
 
@@ -75,8 +75,8 @@ export async function transferXfromMainTo(targetAccountId: string, amount: numbe
 export async function createAccount() {
   const account = await accountService.createAccount();
 
-  logger.info(`the new account private key is: ${account.privateKey}`);
-  logger.info(`the new account public key is: ${account.publicKey}`);
+  log.info(`the new account private key is: ${account.privateKey}`);
+  log.info(`the new account public key is: ${account.publicKey}`);
 
   const path = `${__dirname}/artifacts/${account.name}.json`;
   fs.writeFileSync(path, JSON.stringify(account, null, 2));
@@ -92,8 +92,8 @@ export async function createAccounts() {
   );
 
   accounts.forEach((account) => {
-    logger.info(`the new account private key is: ${account.privateKey}`);
-    logger.info(`the new account public key is: ${account.publicKey}`);
+    log.info(`the new account private key is: ${account.privateKey}`);
+    log.info(`the new account public key is: ${account.publicKey}`);
 
     const path = `${__dirname.replace("/use-cases", "")}/artifacts/${account.name}.json`;
     fs.writeFileSync(path, JSON.stringify(account, null, 2));

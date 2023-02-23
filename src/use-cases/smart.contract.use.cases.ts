@@ -6,7 +6,7 @@ import {
 } from "@hashgraph/sdk";
 import { client } from "src/utils/client";
 import { env } from "src/utils/env";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export class SmartContractUseCases {
   static async deploySmartContract() {
@@ -23,9 +23,9 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
-    logger.info(`your contract ID is: ${receipt.contractId}`);
+    log.info(`your contract ID is: ${receipt.contractId}`);
   }
 
   static async callFunc1() {
@@ -44,13 +44,11 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
     const record = await txResponse.getRecord(client);
 
-    logger.info(
-      `the result of function1 is: ${record.contractFunctionResult?.getUint32()}`,
-    );
+    log.info(`the result of function1 is: ${record.contractFunctionResult?.getUint32()}`);
   }
 
   static async deleteContract() {
@@ -65,6 +63,6 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
   }
 }

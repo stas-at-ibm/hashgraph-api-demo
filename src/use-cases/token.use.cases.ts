@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { AccountBalanceQuery, Hbar, PrivateKey, Wallet } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { TokenService } from "src/services/token.service";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 import { AccountService } from "src/services/account.service";
 
 export class TokenUseCase {
@@ -28,7 +28,7 @@ export class TokenUseCase {
     );
 
     const tokenBalance = await balanceQuery.execute(hedera.client);
-    logger.info(
+    log.info(
       `the balance of the user ${account1Id} is: ${tokenBalance.tokens!.get(tokenId)}`,
     );
 
@@ -56,12 +56,12 @@ export class TokenUseCase {
     const senderAccountBalance = await accountService.getAccountBalanceById(
       sender.accountId,
     );
-    logger.info(
+    log.info(
       `the account balance for sender account ${sender.accountId.toString()} is ${
         senderAccountBalance.hbars
       } HBar`,
     );
-    logger.info(
+    log.info(
       `the token balance for sender account  ${sender.accountId.toString()} is: ${senderAccountBalance.tokens!.get(
         tokenId,
       )}`,
@@ -70,12 +70,12 @@ export class TokenUseCase {
     const recieverAccountBalance = await accountService.getAccountBalanceById(
       reciever.accountId,
     );
-    logger.info(
+    log.info(
       `the account balance for reciever account ${reciever.accountId.toString()} is ${
         recieverAccountBalance.hbars
       } HBar`,
     );
-    logger.info(
+    log.info(
       `the token balance for reciever account  ${reciever.accountId.toString()} is: ${recieverAccountBalance.tokens!.get(
         tokenId,
       )}`,

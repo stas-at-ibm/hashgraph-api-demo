@@ -4,7 +4,7 @@ import pretty from "pino-pretty";
 const path = __dirname.replace("/src/utils", "/tmp/info.stream.out");
 const streams = [{ stream: pino.destination(path) }, { stream: pretty() }];
 
-export const logger = pino(
+export const log = pino(
   {
     name: "hg-demo",
   },

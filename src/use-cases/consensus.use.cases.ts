@@ -1,7 +1,7 @@
 import { TopicCreateTransaction, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { env } from "src/utils/env";
-import { logger } from "src/utils/logger";
+import { log } from "src/utils/logger";
 
 export class ConsensusUseCases {
   static async createProtectedTopic() {
@@ -15,9 +15,9 @@ export class ConsensusUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
-    logger.info(`your topic ID is: ${receipt.topicId}`);
+    log.info(`your topic ID is: ${receipt.topicId}`);
 
     process.exit();
   }
@@ -36,7 +36,7 @@ export class ConsensusUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    logger.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction consensus status is ${receipt.status}`);
 
     process.exit();
   }
@@ -53,9 +53,9 @@ export class ConsensusUseCases {
 
     try {
       const receipt = await txResponse.getReceipt(client);
-      logger.info(`transaction consensus status is ${receipt.status}`);
+      log.info(`transaction consensus status is ${receipt.status}`);
     } catch (error) {
-      logger.error(error, `failed authorization`);
+      log.error(error, `failed authorization`);
     }
 
     process.exit();
