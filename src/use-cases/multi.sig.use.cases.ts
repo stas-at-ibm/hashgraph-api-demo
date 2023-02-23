@@ -24,6 +24,8 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
+    log.info(`transaction consensus status is ${receipt.status}`);
+
     const newAccountId = receipt.accountId!;
 
     log.info(`the new account ID is: ${newAccountId}`);
