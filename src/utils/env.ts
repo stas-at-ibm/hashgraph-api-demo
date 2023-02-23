@@ -55,4 +55,5 @@ export const env = {
   scheduleId: process.env.SCHEDULE_ID!,
   topicId: process.env.TOPIC_ID!,
   tokenId: process.env.TOKEN_ID!,
+  multiSigAccId: "0.0.3555731",
 };

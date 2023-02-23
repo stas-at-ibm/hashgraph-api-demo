@@ -3,6 +3,7 @@ import { TokenUseCase } from "./use-cases/token.use.cases";
 import { logger } from "./utils/logger";
 import dotenv from "dotenv";
 import { ScheduledUseCases } from "./use-cases/scheduled.use.cases";
+import { MultiSigUseCases } from "./use-cases/multi.sig.use.cases";
 
 dotenv.config();
 
@@ -62,6 +63,21 @@ dotenv.config();
 // });
 
 // ScheduledUseCases.submitScheduleTx().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// MultiSigUseCases.createMultiKeyWallet().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// MultiSigUseCases.failingTx().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// MultiSigUseCases.successTx().catch((err) => {
 //   logger.error(err);
 //   process.exit();
 // });
