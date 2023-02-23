@@ -1,12 +1,10 @@
 import { TopicCreateTransaction, TopicMessageSubmitTransaction } from "@hashgraph/sdk";
-import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
+import { client } from "src/utils/client";
 import { env } from "src/utils/env";
 import { log } from "src/utils/log";
 
 export class ConsensusUseCases {
   static async createProtectedTopic() {
-    const client = new HederaTestNetClient().client;
-
     const tx = new TopicCreateTransaction()
       .setSubmitKey(env.acc1.publicKey)
       .setTopicMemo("Hedera HG News");
@@ -18,13 +16,9 @@ export class ConsensusUseCases {
     log.info(`transaction consensus status is ${receipt.status}`);
 
     log.info(`your topic ID is: ${receipt.topicId}`);
-
-    process.exit();
   }
 
   static async submitTimestampAsMessage() {
-    const client = new HederaTestNetClient().client;
-
     const signTx = await new TopicMessageSubmitTransaction({
       topicId: env.topicId,
       message: `this is a timestamp from message submit: ${Date.now().toString()}`,
@@ -37,13 +31,9 @@ export class ConsensusUseCases {
     const receipt = await txResponse.getReceipt(client);
 
     log.info(`transaction consensus status is ${receipt.status}`);
-
-    process.exit();
   }
 
   static async submitMessageFail() {
-    const client = new HederaTestNetClient().client;
-
     const tx = new TopicMessageSubmitTransaction({
       topicId: env.topicId,
       message: "this massage will fail",
@@ -55,9 +45,7 @@ export class ConsensusUseCases {
       const receipt = await txResponse.getReceipt(client);
       log.info(`transaction consensus status is ${receipt.status}`);
     } catch (error) {
-      log.error(error, `failed authorization`);
+      log.error(error, `failed submitting the message on topic ${env.topicId}`);
     }
-
-    process.exit();
   }
 }
