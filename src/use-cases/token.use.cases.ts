@@ -1,12 +1,21 @@
 import dotenv from "dotenv";
-import { AccountBalanceQuery, Hbar, PrivateKey, Wallet } from "@hashgraph/sdk";
+import {
+  AccountBalanceQuery,
+  Hbar,
+  PrivateKey,
+  TokenCreateTransaction,
+  TokenType,
+  Wallet,
+} from "@hashgraph/sdk";
 import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
 import { TokenService } from "src/services/token.service";
 import { log } from "src/utils/log";
 import { AccountService } from "src/services/account.service";
+import { env } from "src/utils/env";
+import { client } from "src/utils/client";
 
 export class TokenUseCase {
-  static async createTokenAccount1() {
+  static async DEPRECATEDcreateTokenAccount1() {
     dotenv.config();
 
     const account1Id = <string>process.env.ACCOUNT1_ID;
@@ -33,6 +42,33 @@ export class TokenUseCase {
     );
 
     process.exit();
+  }
+
+  static async createTokenAccount1() {
+    const tx = new TokenCreateTransaction()
+      .setTokenName("Game Token")
+      .setTokenSymbol("GT")
+      .setTokenType(TokenType.FungibleCommon)
+      .setTreasuryAccountId(env.acc1.id)
+      .setInitialSupply(1000)
+      .setAdminKey(env.acc1.publicKey)
+      .freezeWith(client);
+
+    const signTx = await tx.sign(env.acc1.privateKey);
+
+    const txResponse = await signTx.execute(client);
+
+    const receipt = await txResponse.getReceipt(client);
+
+    log.info(`transaction consensus status is ${receipt.status}`);
+
+    log.info(`the new token ID is ${receipt.tokenId}`);
+
+    const query = new AccountBalanceQuery().setAccountId(env.acc1.id);
+
+    const balance = await query.execute(client);
+
+    log.info(`the balance of the user is: ${balance.tokens!.get(receipt.tokenId!)}`);
   }
 
   static async atomicSwap() {
