@@ -4,6 +4,8 @@ import { logger } from "./utils/logger";
 import dotenv from "dotenv";
 import { ScheduledUseCases } from "./use-cases/scheduled.use.cases";
 import { MultiSigUseCases } from "./use-cases/multi.sig.use.cases";
+import { ConsensusUseCases } from "./use-cases/consensus.use.cases";
+import { SmartContractUseCases } from "./use-cases/smart.contract.use.cases";
 
 dotenv.config();
 
@@ -81,3 +83,48 @@ dotenv.config();
 //   logger.error(err);
 //   process.exit();
 // });
+
+// ConsensusUseCases.createProtectedTopic().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ConsensusUseCases.submitTimestampAsMessage().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// ConsensusUseCases.submitMessageFail().catch((err) => {
+//   logger.error(err);
+//   process.exit();
+// });
+
+// SmartContractUseCases.deploySmartContract()
+//   .then(() => {
+//     logger.info("done...");
+//     process.exit();
+//   })
+//   .catch((err) => {
+//     logger.error(err);
+//     process.exit();
+//   });
+
+// SmartContractUseCases.callFunc1()
+//   .then(() => {
+//     logger.info("done...");
+//     process.exit();
+//   })
+//   .catch((err) => {
+//     logger.error(err);
+//     process.exit();
+//   });
+
+// SmartContractUseCases.deleteContract()
+//   .then(() => {
+//     logger.info("done...");
+//     process.exit();
+//   })
+//   .catch((err) => {
+//     logger.error(err);
+//     process.exit();
+//   });
