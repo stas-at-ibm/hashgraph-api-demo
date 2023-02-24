@@ -25,7 +25,7 @@ export class ScheduledUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     log.info(`the schedule ID is ${receipt.scheduleId}`);
   }
@@ -40,7 +40,7 @@ export class ScheduledUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
   }
 
   static async scheduleTxInfo() {
@@ -48,26 +48,25 @@ export class ScheduledUseCases {
 
     const info = await query.execute(client);
 
-    log.info(`the scheduledId you queried for is: ${info.scheduleId.toString()}`);
-    log.info(`the memo for it is: ${info.scheduleMemo}`);
-    log.info(`it got created by: ${info.creatorAccountId!.toString()}`);
-    log.info(`it got payed by: ${info.payerAccountId!.toString()}`);
-
     const expirationTime = new Timestamp(
       info.expirationTime!.seconds,
       info.expirationTime!.nanos,
     ).toDate();
+
+    log.info(`the scheduledId you queried for is: ${info.scheduleId.toString()}`);
+    log.info(`the memo for it is: ${info.scheduleMemo}`);
+    log.info(`it got created by: ${info.creatorAccountId!.toString()}`);
+    log.info(`it got payed by: ${info.payerAccountId!.toString()}`);
     log.info(`the expiration time of the scheduled tx is: ${expirationTime}`);
 
-    if (info.executed === null) {
-      log.info(`the transaction has not been executed yet`);
-    } else {
-      const executionTime = new Timestamp(
-        info.executed!.seconds,
-        info.executed!.nanos,
-      ).toDate();
-      log.info(`the time of execution of the scheduled tx is: ${executionTime}`);
-    }
+    info.executed
+      ? log.info(`the transaction has not been executed yet`)
+      : log.info(
+          `the time of execution of the scheduled tx is: ${new Timestamp(
+            info.executed!.seconds,
+            info.executed!.nanos,
+          ).toDate()}`,
+        );
   }
 
   static async submitScheduleTx() {

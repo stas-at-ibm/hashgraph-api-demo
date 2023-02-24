@@ -82,9 +82,7 @@ export class TokenUseCase {
         .setAccountId(env.acc1.id)
         .execute(client);
 
-      log.info(
-        `the account balance for sender ${env.acc1.id} is ${senderBalance.hbars} HBar`,
-      );
+      log.info(`the account balance for sender ${env.acc1.id} is ${senderBalance.hbars}`);
       log.info(
         `the token balance for sender ${env.acc1.id} is: ${senderBalance.tokens!.get(
           env.tokenId,
@@ -96,7 +94,7 @@ export class TokenUseCase {
         .execute(client);
 
       log.info(
-        `the account balance for reciever ${env.acc2.id} is ${recieverBalance.hbars} HBar`,
+        `the account balance for reciever ${env.acc2.id} is ${recieverBalance.hbars}`,
       );
       log.info(
         `the token balance for reciever ${env.acc2.id} is: ${recieverBalance.tokens!.get(

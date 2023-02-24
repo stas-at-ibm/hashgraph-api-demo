@@ -23,7 +23,7 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     log.info(`your contract ID is: ${receipt.contractId}`);
   }
@@ -44,7 +44,7 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     const record = await txResponse.getRecord(client);
 
@@ -63,6 +63,8 @@ export class SmartContractUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
+
+    log.info(`contract ${env.contractId} deleted`);
   }
 }

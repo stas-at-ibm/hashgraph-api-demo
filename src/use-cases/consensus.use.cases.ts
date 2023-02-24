@@ -13,7 +13,7 @@ export class ConsensusUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     log.info(`your topic ID is: ${receipt.topicId}`);
   }
@@ -30,7 +30,7 @@ export class ConsensusUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
   }
 
   static async submitMessageFail() {
@@ -43,7 +43,7 @@ export class ConsensusUseCases {
 
     try {
       const receipt = await txResponse.getReceipt(client);
-      log.info(`transaction consensus status is ${receipt.status}`);
+      log.info(`transaction status is ${receipt.status}`);
     } catch (error) {
       log.error(error, `failed submitting the message on topic ${env.topicId}`);
     }

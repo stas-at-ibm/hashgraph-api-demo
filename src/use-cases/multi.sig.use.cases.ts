@@ -24,7 +24,7 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     const newAccountId = receipt.accountId!;
 
@@ -50,7 +50,7 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
   }
 
   static async successTx() {
@@ -66,12 +66,12 @@ export class MultiSigUseCases {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     const query = new AccountBalanceQuery().setAccountId(env.acc4.id);
 
     const balance = await query.execute(client);
 
-    log.info(`the balance for account ${env.acc4.id} is ${balance.hbars} HBar`);
+    log.info(`the balance for account ${env.acc4.id} is ${balance.hbars}`);
   }
 }

@@ -59,7 +59,7 @@ export class AccountUseCases {
     }
 
     async function logAccountInfo(acc: Account) {
-      const accountBalance = await new AccountBalanceQuery()
+      const balance = await new AccountBalanceQuery()
         .setAccountId(acc.id)
         .execute(client);
 
@@ -67,7 +67,7 @@ export class AccountUseCases {
       log.info(`the new account ID is: ${acc.id}`);
       log.info(`the new account private key is: ${acc.privateKey}`);
       log.info(`the new account public key is: ${acc.publicKey}`);
-      log.info(`the new account balance is: ${accountBalance.hbars}\n`);
+      log.info(`the new account balance is: ${balance.hbars}\n`);
     }
 
     async function persistAccountToFs(acc: Account) {
@@ -95,15 +95,13 @@ export class AccountUseCases {
 
     log.info(`transaction status is ${receipt.status}`);
 
-    await logAccountBalance(env.mainAcc.id);
-    await logAccountBalance(env.acc1.id);
+    await logBalance(env.mainAcc.id);
+    await logBalance(env.acc1.id);
 
-    async function logAccountBalance(id: string) {
-      const accountBalance = await new AccountBalanceQuery()
-        .setAccountId(id)
-        .execute(client);
+    async function logBalance(id: string) {
+      const balance = await new AccountBalanceQuery().setAccountId(id).execute(client);
 
-      log.info(`the account ${id} balance is: ${accountBalance.hbars}`);
+      log.info(`the account ${id} balance is: ${balance.hbars}`);
     }
   }
 }
