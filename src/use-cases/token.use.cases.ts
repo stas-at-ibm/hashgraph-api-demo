@@ -1,49 +1,16 @@
-import dotenv from "dotenv";
 import {
   AccountBalanceQuery,
   Hbar,
-  PrivateKey,
+  TokenAssociateTransaction,
   TokenCreateTransaction,
   TokenType,
-  Wallet,
+  TransferTransaction,
 } from "@hashgraph/sdk";
-import { HederaTestNetClient } from "src/infrastructure/hedera.testnet.client";
-import { TokenService } from "src/services/token.service";
 import { log } from "src/utils/log";
-import { AccountService } from "src/services/account.service";
 import { env } from "src/utils/env";
 import { client } from "src/utils/client";
 
 export class TokenUseCase {
-  static async DEPRECATEDcreateTokenAccount1() {
-    dotenv.config();
-
-    const account1Id = <string>process.env.ACCOUNT1_ID;
-    const account1PrivateKey = PrivateKey.fromString(process.env.ACCOUNT1_PRIVATE_KEY!);
-
-    const hedera = new HederaTestNetClient(account1Id, account1PrivateKey);
-    const tokenService = new TokenService(hedera);
-
-    const account1AdminUser = new Wallet(account1Id, account1PrivateKey);
-    const tokenId = await tokenService.createFungibleToken(
-      "Game Token",
-      "GT",
-      1000,
-      account1AdminUser,
-    );
-
-    const balanceQuery = new AccountBalanceQuery().setAccountId(
-      account1AdminUser.accountId,
-    );
-
-    const tokenBalance = await balanceQuery.execute(hedera.client);
-    log.info(
-      `the balance of the user ${account1Id} is: ${tokenBalance.tokens!.get(tokenId)}`,
-    );
-
-    process.exit();
-  }
-
   static async createTokenAccount1() {
     const tx = new TokenCreateTransaction()
       .setTokenName("Game Token")
@@ -60,7 +27,7 @@ export class TokenUseCase {
 
     const receipt = await txResponse.getReceipt(client);
 
-    log.info(`transaction consensus status is ${receipt.status}`);
+    log.info(`transaction status is ${receipt.status}`);
 
     log.info(`the new token ID is ${receipt.tokenId}`);
 
@@ -72,51 +39,70 @@ export class TokenUseCase {
   }
 
   static async atomicSwap() {
-    const tokenId = process.env.TOKEN_ID!;
-    const account1Id = process.env.ACCOUNT1_ID!;
-    const account1PrivateKey = process.env.ACCOUNT1_PRIVATE_KEY!;
-    const sender = new Wallet(account1Id, account1PrivateKey);
-    const reciever = new Wallet(
-      process.env.ACCOUNT2_ID!,
-      process.env.ACCOUNT2_PRIVATE_KEY!,
-    );
+    await associate();
+    await swap();
+    await logBalance();
 
-    const hedera = new HederaTestNetClient(account1Id, account1PrivateKey);
-    const tokenService = new TokenService(hedera);
-    const accountService = new AccountService(hedera);
+    async function associate() {
+      const tx = new TokenAssociateTransaction()
+        .setAccountId(env.acc2.id)
+        .setTokenIds([env.tokenId])
+        .freezeWith(client);
 
-    await (
-      await tokenService.associateAccountWithToken(reciever, tokenId)
-    ).atomicSwap(sender, reciever, tokenId, 150, new Hbar(10));
+      const signTx = await tx.sign(env.acc2.privateKey);
 
-    const senderAccountBalance = await accountService.getAccountBalanceById(
-      sender.accountId,
-    );
-    log.info(
-      `the account balance for sender account ${sender.accountId.toString()} is ${
-        senderAccountBalance.hbars
-      } HBar`,
-    );
-    log.info(
-      `the token balance for sender account  ${sender.accountId.toString()} is: ${senderAccountBalance.tokens!.get(
-        tokenId,
-      )}`,
-    );
+      const txResponse = await signTx.execute(client);
 
-    const recieverAccountBalance = await accountService.getAccountBalanceById(
-      reciever.accountId,
-    );
-    log.info(
-      `the account balance for reciever account ${reciever.accountId.toString()} is ${
-        recieverAccountBalance.hbars
-      } HBar`,
-    );
-    log.info(
-      `the token balance for reciever account  ${reciever.accountId.toString()} is: ${recieverAccountBalance.tokens!.get(
-        tokenId,
-      )}`,
-    );
+      const receipt = await txResponse.getReceipt(client);
 
-    process.exit();
+      log.info(`transaction status is ${receipt.status}`);
+
+      log.info(`token ${env.tokenId} associated with the user ${env.acc2.id} account`);
+    }
+
+    async function swap() {
+      const tx = new TransferTransaction()
+        .addHbarTransfer(env.acc2.id, new Hbar(-10))
+        .addHbarTransfer(env.acc1.id, new Hbar(10))
+        .addTokenTransfer(env.tokenId, env.acc1.id, -150)
+        .addTokenTransfer(env.tokenId, env.acc2.id, 150)
+        .freezeWith(client);
+
+      const signTx = await (await tx.sign(env.acc1.privateKey)).sign(env.acc2.privateKey);
+
+      const txResponse = await signTx.execute(client);
+
+      const receipt = await txResponse.getReceipt(client);
+
+      log.info(`transaction status is ${receipt.status}`);
+    }
+
+    async function logBalance() {
+      const senderBalance = await new AccountBalanceQuery()
+        .setAccountId(env.acc1.id)
+        .execute(client);
+
+      log.info(
+        `the account balance for sender ${env.acc1.id} is ${senderBalance.hbars} HBar`,
+      );
+      log.info(
+        `the token balance for sender ${env.acc1.id} is: ${senderBalance.tokens!.get(
+          env.tokenId,
+        )}`,
+      );
+
+      const recieverBalance = await new AccountBalanceQuery()
+        .setAccountId(env.acc2.id)
+        .execute(client);
+
+      log.info(
+        `the account balance for reciever ${env.acc2.id} is ${recieverBalance.hbars} HBar`,
+      );
+      log.info(
+        `the token balance for reciever ${env.acc2.id} is: ${recieverBalance.tokens!.get(
+          env.tokenId,
+        )}`,
+      );
+    }
   }
 }
