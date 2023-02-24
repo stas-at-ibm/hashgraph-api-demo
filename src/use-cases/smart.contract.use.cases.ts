@@ -10,7 +10,7 @@ import { log } from "src/utils/log";
 
 export class SmartContractUseCases {
   static async deploySmartContract() {
-    const bytecode = require("../artifacts/CertificationC1.json").bytecode;
+    const bytecode = require("../../artifacts/CertificationC1.json").bytecode;
 
     const tx = new ContractCreateFlow()
       .setGas(100000)

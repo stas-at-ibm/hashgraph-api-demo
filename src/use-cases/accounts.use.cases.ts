@@ -32,7 +32,7 @@ export class AccountUseCases {
     }
 
     for (const acc of accounts) {
-      await persistAccountToFs(acc);
+      persistAccountToFs(acc);
     }
 
     async function createOneAccount(name: string, initHbar: number): Promise<Account> {
@@ -70,7 +70,7 @@ export class AccountUseCases {
       log.info(`the new account balance is: ${balance.hbars}\n`);
     }
 
-    async function persistAccountToFs(acc: Account) {
+    function persistAccountToFs(acc: Account) {
       const path = `${__dirname.replace("/src/use-cases", "")}/artifacts/${
         acc.name
       }.json`;
